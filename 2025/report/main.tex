@@ -1,0 +1,131 @@
+\documentclass[12pt,letter]{article}
+\usepackage{geometry}\geometry{top=0.75in}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{xcolor} % Color words
+\usepackage{cancel} % Crossing parts of equations out
+\usepackage{tikz}       % Drawing 
+\usepackage{pgfplots}   % Other plotting
+\usepgfplotslibrary{colormaps,fillbetween}
+\usepackage{placeins}   % Float barrier
+\usepackage{hyperref}   % Links
+\usepackage{tikz-qtree} % Trees
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{multicol}
+\usepackage{graphicx}   % For graphics
+\usepackage{parcolumns}
+\usepackage{listings}   % lstlisting
+\usepackage{pdfpages}
+\usepackage{parskip}
+\usepackage{bibentry}
+\usepackage{enumitem}
+
+\begin{document}
+\title{Report for the Dissertation Advisory Committee Meeting}
+\author{\parbox{\linewidth}{\centering
+	Joseph McLaguhlin\\
+  Committee : Jee Choi (Advisor), Brittany Erickson, Hank Childs
+	University of Oregon}}
+\maketitle
+\parskip 0.0625in
+
+%\section*{Organization}
+%\begin{enumerate} 
+%\item[\S \ref{sec:bac}] Background
+%\item[\S \ref{sec:res}] Current research
+%\item[\S \ref{sec:pub}] Publications
+%\item[\S \ref{sec:fut}] Future directions
+%\item[\S \ref{sec:act}] Activities \& service
+%\end{enumerate}
+
+
+\section{Background}
+\label{sec:bac}
+\paragraph{Hybridized PDEs.}
+The solutions to systems of linear equations are a core computation of a wide branch of scientific computing. 
+These systems are described by solutions given a vectors, $x \in \mathbb{R}^n$, from the equation 
+\begin{equation}
+  A x = b,
+\end{equation}
+where $A \in \mathbb{R}^{n\times n}, b \in \mathbb{R}^n$.
+Solutions to $x$ are sought either by factorizing $A$ or through iterative methods such as gradient descent or Newton's method. 
+The shape and size of $A$ largely influences the performance choice of method when solving $x$; broadly, when solving physics equations the domain is ``connected,'' appearing sparse with values coalesced around the diagonal. 
+Hybridization is a domain decomposition method where the domain can be divided into independent problems, written 
+\begin{equation}
+  A = \{A_0 \cdots A_{b-1}\},
+\end{equation}
+where $A_b \in \mathbb{R}^{m\times m}, m = n/b$ for $b$ independent problems. 
+Hybridized PDEs can then be solved as a set of parallel problems instead of a single solve. 
+This is achieved by connecting the independent problems with \emph{interfaces} that capture the component of the solution along the internal faces of the problem. 
+This has key benefits for data reuse and computational complexity as we only need to store a single independent problem where multiple domains are identical, \emph{i.e.}, $A_i = A_j$. 
+
+\paragraph{Data parallelism.}
+Recent advancements in data parallel computing have made memory efficiency and data reuse key to achieving performance for scientific computing problems. 
+In particular, solving linear systems of equations has a low arithmetic intensity, limiting the gains that can be found from simply performing arithmetic faster.
+Instead, research has trended towards how to maximize data reuse to more effectively use every arithmetic computation.
+This has largely been studied at the ``kernel level'' looking to optimize the performance of specific linear algebra operations. 
+The greatest achievements in this area have been sought through the development of GPU-based \emph{matrix-free} iterative methods that minimize the amount of data required to store the matrix operator by only storing the patterned components.   
+
+\section{Current research}
+\label{sec:res}
+My current research focuses on a more thorough understanding the factors that affect
+the performance of hybridized PDEs. 
+%
+In particular I am looking at how the setup of the problem --- not just kernel-level optimizations --- affect 
+affects of the computational grid effects the PDE problem. 
+%
+Currently I am finalizing on my area exam which comprehensively surveys the memory efficient PDE solvers for contemporary problems.
+This work will serve as survey of recent work in optimizing PDE solvers for the current hardware offerings as well as a ``jumping off point'' for researchers to understand what applications these solvers are used for and what software libraries implement them. 
+%
+I currently have one manuscript in submission studying the performance of hybridized PDEs for different grid sizes on shared memory CPU architectures. 
+%
+I am also currently developing a related paper studying the performance on AMD's APU architecture, where the CPU and GPU share the same memory space. 
+%
+This paper will likely compare APU style devices with traditional discrete GPUs and with Nvidia \emph{omnilink} that intends to simulate an APU style device. 
+
+This goal of this work is to extend it into a software library for running large-scale earthquake cycle simulations in collaboration with Prof. Brittany Erickson. 
+Such a system should be extensible beyond earthquake cycle simulations being easily integrated into other projects through a base C++ library as well as exported to a high-level julia framework to integrate with existing simulation code. 
+%
+This will comprise a major part of my dissertation, and I plan to demonstrate its usefulness for a larger community of computation scientists. 
+
+\nobibliography{pubs}
+%\bibliographystyle{unsrt}
+\bibliographystyle{ieeetr}
+
+\section{Publications}
+\label{sec:pub}
+\begin{enumerate}
+ \item Mclaughlin, Joseph and Choi, Jee, ``SMOOTH: Shared Memory Optimal Orthogonal Tiling for Hybridized PDEs,'' \textbf{[in submission]}.
+ \item \bibentry{mclaughlin2023grid}
+\end{enumerate}
+
+\section{Future directions}
+\label{sec:fut}
+\begin{enumerate}
+  \item Algorithms paper: \emph{``Optimizing 2-D variable coeff. PDE performance on GPUs."}
+  \item Algorithms paper: \emph{``GNNs to predict variable computational sizing."}
+  \item Applications paper: \emph{``2-D variable coeff. earthquake cycle model"}
+  \item Applications paper:\emph{``3-D earthquake cycle model."}
+  \item Journal paper: \emph{``Modeling earthquake cycles on massive scales."}
+\end{enumerate}
+
+\section{Internship}
+\begin{itemize}[leftmargin=4.5em]
+  \item[\emph{Jun. '24}] Summer Student. \textbf{Los Alamos National Laboratories}. This internship involved a the optimization of existing HIP code to AMD's MI300A APU platform. The project worked on PARTISN, an existing LANL codebase for simulation neutron transport. While there are some differences, the problem used a domain decomposition method similar to hybridization and provided so foundational insight on how best to optimize my own work. This was conducted with Mario Ortega and benefited the development of PARTISN.
+\end{itemize}
+\section{Activities \& service}
+\label{sec:act}
+\begin{itemize}[leftmargin=4.5em]
+  \item[\emph{Ongoing}] GE-R. \textbf{Sandia National Laboratories} LDRD.
+  \item[\emph{Apr. '24}] Graduate Education Committee (GEC) Student Representative. \textbf{University of Oregon}.
+  \item[\emph{Jun. '24}] Volunteer Artifact Evaluator. \textbf{Supercomputing 2025}.
+
+  \item[\emph{Nov. '24}] Invited Guest Lecturer. \textbf{California Polytechnic State University}. CSC 469 - Distributed Systems.
+  \item[\emph{Nov. '24}] Attendee. \textbf{Supercomputing 2025}. Attended various sessions on performance profiling and scientific computing.
+  \item[\emph{Feb. '25}] Conference Co-chair. \textbf{University of Oregon}. UO-AMD Workshop on AMD MI300A. This event attracted 45 graduate students and researchers from around the US and was the first time that AMD held a (non-gov) open event allowing their resources to accessed by the public. 
+  \item[\emph{Feb. '25}] Lecturer. \textbf{University of Oregon}.  CS 330 - C++ \& Unix. Conducted 5 lectures while Jee Choi was on medical leave.
+\end{itemize}
+
+\end{document}
