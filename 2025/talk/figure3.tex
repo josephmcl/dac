@@ -1,0 +1,161 @@
+\begin{tikzpicture}[scale=0.7, trim axis left,trim axis right]
+    \begin{axis}[
+        ybar,
+        every legend image post/.append style={
+            scale=2
+        },
+        legend style = {
+            at={(1.1, -0.35)},
+            anchor = north east,
+            legend columns = 2},
+        height=2in,
+        width=\columnwidth - 2em,
+        axis x line*=none,
+        axis y line*=right,
+        xtick = {1, 2, 3, 4},
+        xticklabels = {$1e6$, $2e6$, $4e6$, $8e6$},
+        domain = 1:64,
+        range = 0:100,
+        xlabel={\footnotesize Global volume size ($\bar{n}^2$)},
+        log ticks with fixed point,
+        %ymode = log,
+        %log origin y = infty,
+        %grid=both,
+        %grid style={line width=.1pt, draw=gray!10},
+        %major grid style={line width=.2pt,draw=gray!50},
+        xshift=-10em,
+        ylabel={Execution time (s)}]
+        \addplot[ybar,
+            %every node near coord/.append style={
+            %    font=\footnotesize, 
+            %    yshift = 2em,
+            %    xshift = -0.5em,
+            %}, 
+            fill=red!30,
+            bar width=0.5em,
+            postaction={
+                pattern=north east lines,
+                pattern color=black!60
+            }] 
+            coordinates {
+                (1, 0.049) 
+                (2, 0.12) 
+                (3, 0.308) 
+                (4, 1.32)};
+        \addplot[ybar,
+            %nodes near coords,
+            %every node near coord/.append style={
+            %    font=\footnotesize, 
+            %    yshift = 2em,
+            %    xshift = 0.5em,
+            %}, 
+            fill=violet!30,
+            bar width=0.5em,
+            postaction={
+                pattern=north west lines,
+                pattern color=black!60
+            }] 
+            coordinates {
+                (1, 0.053) 
+                (2, 0.141) 
+                (3, 0.364) 
+                (4, 1.51)};
+            
+        \addplot[ybar,    
+            fill=green!30,
+            bar width=0.5em] 
+            coordinates {
+                (1, 0.58) 
+                (2, 0.9) 
+                (3, 1.32)};
+
+                \addplot[ybar,
+            bar width=0.5em,
+            fill=orange!30,
+            postaction={
+                pattern=grid,
+                pattern color=black!60
+            }] 
+            coordinates {
+                (1, 0.5) 
+                (2, 1.12) 
+                (3, 2.1)};
+                
+
+                
+        \addlegendentry{\footnotesize SR Hyb.}
+        \addlegendentry{\footnotesize IL Hyb.}
+        \addlegendentry{\footnotesize SR CG/QR}
+        \addlegendentry{\footnotesize IL CG/QR}
+    \end{axis}
+    \begin{axis}[
+        legend style = {
+            at={(-0.1, -0.35)},
+            anchor = north west,
+            legend columns = 1},
+        height=2in,
+        width=\columnwidth - 2em,
+        axis x line*=bottom,
+        axis y line*=left,
+        xtick = {1, 2, 3, 4},
+        axis x line=none,
+        domain = 1:64,
+        range = 0:100,
+        xlabel={\footnotesize Problem size ($\bar{n^2}$)},
+        log ticks with fixed point,
+        %grid=both,
+        %grid style={line width=.1pt, draw=gray!10},
+        %major grid style={line width=.2pt,draw=gray!50},
+        ymode=log,
+        log origin y=infty,
+        xshift=-10em,
+        ytick={5, 7.5, 10},
+        yticklabels={$5\times$, $7.5\times$, $10\times$},
+        ylabel={Speedup (log)}]      
+        \addplot[
+            every node near coord/.style={
+                anchor = west
+                /pgf/number format/fixed,
+                /pgf/number format/precision=1
+                },
+            nodes near coords={%
+            \footnotesize {\pgfmathprintnumber[fixed]{\pgfkeysvalueof{/data point/y}}}$\times$},
+            mark=*,
+            color=red] coordinates {
+                (1, 12.1) 
+                (2, 8) 
+                (3, 5) 
+            };
+        \addplot[
+            every node near coord/.style={
+                anchor = west
+                /pgf/number format/fixed,
+                /pgf/number format/precision=1
+                },
+            nodes near coords={%
+            \footnotesize {\pgfmathprintnumber[fixed]{\pgfkeysvalueof{/data point/y}}}$\times$},
+            mark=square*,
+            color=violet] coordinates {
+                (1, 11.5) 
+                (2, 9) 
+                (3, 6) 
+            };
+        
+        \addplot[ 
+            mark=x, 
+            color=black,
+            mark size = 0.3 em,
+            mark options={line width=1pt},
+            xshift=0.8em
+        ] coordinates {(4,5)};
+        \addplot[ 
+            mark=x, 
+            color=black,
+            mark size = 0.3 em,
+            mark options={line width=1pt},
+            xshift=0.3em
+        ] coordinates {(4,5)};
+        \addlegendentry{\footnotesize SR Speedup}
+        \addlegendentry{\footnotesize IL Speedup}
+    \end{axis}
+\end{tikzpicture}

@@ -1,0 +1,218 @@
+\documentclass[serif]{beamer}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{babel}
+\renewcommand{\figurename}{Fig.}
+\usepackage[labelsep=endash]{caption}
+\usepackage[dvipsnames]{color, xcolor}
+\usepackage{subcaption}
+\usepackage{tikz,pgfplots}
+\usepackage{tikzpagenodes}
+\usetikzlibrary{datavisualization.formats.functions,backgrounds,calc}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{pgfplotstable}
+\usetikzlibrary{pgfplots.colormaps}
+\pgfplotsset{compat=1.9}
+\usepgfplotslibrary{units,groupplots}
+\usepgfplotslibrary{patchplots}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows.meta}
+
+\usepackage[utf8]{inputenc}
+\usepackage[TS1,T1]{fontenc}
+\usepackage{fourier, heuristica}
+\usepackage{array, booktabs}
+\usepackage{graphicx}
+\usepackage[x11names,table]{xcolor}
+\usepackage{caption}
+
+\newcommand{\foo}{\makebox[0pt]{\textbullet}\hskip-0.5pt\vrule width 1pt\hspace{\labelsep}}
+
+
+\title{DAC Presentation; Winter 2025}
+\author{Joseph McLaughlin}
+\date{March 2025}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{normal text}{fg=black}
+%\setbeamercolor{frametitle}{fg=black}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\begin{frame}{External work \& service}
+    \begin{center}        
+        \begin{itemize}
+            \setlength{\itemindent}{4em}
+            \item[May 2024] Artifact evaluator for SC '24.
+            \item[June 2024] On-site internship at LANL.
+            \item[November 2024] Invited Guest Lecturer, Cal Poly, CSC 469.
+            \item[February 2025] Co-chaired UO-AMD Workshop (45 attendees).
+            \item[March 2025] Lecturer, University of Oregon, CS 330.
+            \item[GE-R] SNL LDRD on performance of tensor methods.  
+        \end{itemize}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Current direction}
+A comprehensive ``end-to-end'' understanding of performance for applications of PDE solvers. \\[1em]
+
+PDE application hierarchy 
+\begin{itemize}
+    \item Meshing techniques, timesteppers. 
+    \item Properties of the numerical method, \emph{e.g.}, stability, order-of-accuracy.
+    \item Solver methods, preconditioners. 
+    \item Linear algebra kernel implementations.
+    \item Hardware.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Current direction}
+Components of these problems are often studied in isolation or \emph{at least} without an explicit consideration for other components of the problem. \\ [1em]
+\begin{itemize}
+    \item[\textbf{RQ}] How should we interoperate performance results that are studied in a narrow context?
+    \item[\textbf{RQ}] Are there any major holes in our understanding of these systems?   
+    \item[\textbf{RQ}] How can we demonstrate performance for a wider context of problems? 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Current research: Manuscript A}
+    \begin{center}
+        \emph{``SMOOTH: Shared Memory Optimal Orthogonal Tiling for Hybridized PDEs''}
+    \end{center}
+
+    \textbf{Motivation} --- hybridization allows us to decompose this problem into smaller computational blocks. The ubiquitous strategy in the literature is to use very small blocks, why is this? 
+
+    \textbf{Key contributions}
+    \begin{itemize}
+        \item A hardware-aware performance model. 
+        \item Analytical and empirical results show that most problems are meshed too finely and that the ideal mesh is hardware dependent. 
+        \item A performant implementation for Intel CPUs.
+        \item Notable speedup over existing work that validate our model (up $92\times$ depending on the solver). 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Manuscript A: Updates}
+
+    Submitted to PPoPP'25 (CORE Rank: A). \\
+    \begin{center}
+    Reviews: \emph{{\color{ForestGreen} accept}, {\color{YellowGreen}weak accept}, {\color{YellowOrange} weak reject}, {\color{YellowOrange} weak reject}. \\ Familiarity: moderate, moderate, low, low.}
+    \end{center}
+    Final decision: reject. \\
+
+    Key feedback:
+    \begin{itemize}
+        \item Clarify contributions. 
+        \item Additional performance results.
+        \item Improve figures.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Manuscript A: Updates}
+    \begin{figure}[tp]
+        \centering
+            \begin{subfigure}[t]{\textwidth}
+                \centering
+                \input{figure1}
+            \end{subfigure}
+            \begin{subfigure}[t]{\textwidth}
+                \centering
+            \input{figure2}
+        \end{subfigure}
+        \caption{Performance model applied to prior arts, predicting potential speed up for various CPUs.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Manuscript A: Submission cycle 1}
+    \begin{figure}[tp]
+        \centering
+        \input{figure3}
+        \caption{Detailed execution time and speed up plots replacing tables.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Manuscript A: Submission cycle 2}
+    Submitted to ICS'25 (CORE Rank A). \\
+    \begin{center}
+    Reviews: \emph{{\color{YellowOrange} weak reject}, {\color{YellowOrange} weak reject}, {\color{red} reject}. \\ All low familiarity. }
+    \end{center}
+    Final decision: \emph{pending.} \\[1em]
+
+    Key feedback: \emph{pending.}  \\[1em]
+
+    \textbf{Next steps: Resubmit to ICPP'25 (CORE A).}
+\end{frame}
+
+\begin{frame}{Current research: Manuscript B}
+    \begin{center}
+        \emph{``Load balancing PDEs on APU architectures.''}
+    \end{center}
+    Key contributions:
+    \begin{itemize}
+        \item Demonstrate an application tailored to unified memory models --- not just ported over from GPU. 
+        \item A performant solver for AMD MI300A. 
+        \item Performance comparison between psuedo-unified memory, \emph{e.g.}, Nvidia Grace-Hopper, with execution time and power. 
+        \item And between traditional discrete 
+    \end{itemize} \\[1em]
+    \textbf{Possible motivations} --- Head to head with SoTA solvers, \emph{i.e.,} matrix-free GPU.
+    
+    {\footnotesize \textsc{note:} current art is just porting not demonstrating applications tailored MI300A and is just porting them over.} \\[1em]
+    
+    Target: SC'25.
+\end{frame}
+
+\begin{frame}{Area Exam}
+    \begin{center}
+        \emph{``Current directions in high-performance PDE solvers: contemporary theory, memory efficiency, \& applications.''}
+    \end{center}
+    Organization 
+    \begin{enumerate}
+        \item Introduction \& background.
+        \item PDE primer,
+        \item Contemporary applied math \& solver methods,
+        \item Applications \& use cases,
+        \item Performance \& hardware, 
+        \item Software library support,
+        \item Summary.
+    \end{enumerate} \\[1em]
+    Date: \emph{pending}.
+\end{frame}
+
+    \begin{frame}{Future directions}
+        Manuscript C (late 2025, performance track)
+        \begin{center}
+            \emph{`Optimizing 2-D variable coeff. PDE performance on GPUs."}
+        \end{center} \\[1em]
+        Manuscript D (early 2026, application track)
+        \begin{center}
+            \emph{``2-D variable coeff. earthquake cycle model"} \\
+            --or-- \\
+            \emph{``3-D earthquake cycle model."} \\ 
+        \end{center}
+        Manuscript E (2026, journal paper)
+        \begin{center}
+            \emph{``Modeling earthquake cycles on massive scales."}
+        \end{center}
+    \end{frame}
+    \begin{frame}{Timeline}
+        \begin{center}
+            \captionsetup{singlelinecheck=false, font=blue, labelfont=sc, labelsep=quad}
+            \caption{Timeline}\vskip -1.5ex
+            \begin{tabular}{@{\,}r <{\hskip 2pt} !{\foo} >{\raggedright\arraybackslash}p{5cm}}
+            \toprule
+            \addlinespace[1.5ex]
+            Spring 2025 & Resubmit Manuscript A (ICPP)\\
+              & Submit Manuscript B (SC) \\
+              & Defend Area Exam \\
+            Fall 2025 & Submit Manuscript C (PPoPP/IPDPS)\\
+            Winter 2026 & Submit Manuscript D (ICS/ICPP/EuroPar)\\
+            Spring 2026 & Submit Manuscript E \\
+            Summer/Fall 2026 & Dissertation \\
+            \end{tabular}
+        \end{center}
+    \end{frame}
+
+\end{document}
